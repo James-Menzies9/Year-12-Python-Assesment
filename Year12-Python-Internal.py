@@ -86,5 +86,15 @@ def gui_add_monster():
         ["Yes","Edit","Cancel"]
         )
 
+        if choice == "Yes":
+            break
+        elif choice == "Edit":
+            gui_add_monster(name)
+            break   
+        else:
+            delete_monster(name)
+            eg.msgbox("Monster discarded.")
+            break
 
+        
     
