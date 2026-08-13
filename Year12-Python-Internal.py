@@ -18,12 +18,12 @@ monster_catalogue = {
             # Main Code
 # Validation Structure 
 
-def validate_stat (values) :
-    "Ensure stats is a number between 1-25"
-    if:
+def validate_stat (values):
+    """Ensure stats is a number between 1-25"""
+    try:
         value = int(value)
         return 1 <= value <= 25 
-    else:
+    except:
         return False
 def validate_name(name):
     "Ensure name is not empty."
@@ -64,8 +64,8 @@ def gui_add_monster():
         e.msgbox("Invalid Name")
         return
 
-    if not all([validate_stat(speed), validate_stat(strength)
-                validate_stat(cunning), validate_stat(stealth)])
+    if not all([validate_stat(speed), validate_stat(strength),
+                validate_stat(cunning), validate_stat(stealth)]):
         e.msgbox("Stats must between numbers 1-25")
         return
 
@@ -85,4 +85,6 @@ def gui_add_monster():
         "Confirm Monster",
         ["Yes","Edit","Cancel"]
         )
+
+
     
