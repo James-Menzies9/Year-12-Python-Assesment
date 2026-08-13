@@ -38,7 +38,7 @@ def add_monster(name,stats):
 def delete_monster(name):
     if name in monster_catalogue :
         del monster_catalogue [name] 
-        return true 
+        return True
     return False
 
 def update_monster(name,stat,new_value):
@@ -48,3 +48,41 @@ def update_monster(name,stat,new_value):
 
 #GUI FUNCTIONS
 
+def gui_add_monster():
+    "Add a new monster card."
+    fields = ["Name", "Strength", "Speed", "Stealth", "Cunning"]
+    values = e.multchoicebox("Enter Monsters details","Add Monster", fields)
+
+    name, strength, speed, stealth, cunning = values
+
+    if values is None:
+        return
+
+    #Validation
+    
+    if not validate_name(name):
+        e.msgbox("Invalid Name")
+        return
+
+    if not all([validate_stat(speed), validate_stat(strength)
+                validate_stat(cunning), validate_stat(stealth)])
+        e.msgbox("Stats must between numbers 1-25")
+        return
+
+    stats = {
+         "Strength": int(strength),
+        "Speed": int(speed),
+        "Stealth": int(stealth),
+        "Cunning": int(cunning)
+    }
+
+    added = add_monster(name,stats)
+
+    #Confirmation Loop 
+    while True:
+        choice = e.buttonbox(
+        f"Monster Card added\n\n{name}:{added}\n\nAre these details correct?",
+        "Confirm Monster",
+        ["Yes","Edit","Cancel"]
+        )
+    
