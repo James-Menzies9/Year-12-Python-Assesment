@@ -88,13 +88,115 @@ def gui_add_monster():
 
         if choice == "Yes":
             break
+
         elif choice == "Edit":
             gui_add_monster(name)
-            break   
+            break  
+
         else:
             delete_monster(name)
-            eg.msgbox("Monster discarded.")
+            e.msgbox("Monster discarded.")
             break
 
+def gui_edit_monster(name):
+    "Edit an exsiting monster"
+    monster = monster_catalogue[name]
+
+    fields = ["Strength", "Speed", "Stealth", "Cunning"]
+    defaults = [monster["Strength"], monster["Speed"], monster["Stealth"], 
+    monster["Cunning"]]
+
+    values = e.multenterbox(f"Editing {name}", "Edit Monster", fields, defaults)
+
+    if values is None:
+        return
+
+    strength, speed, stealth, cunning = values
+
+
+    if not all([validate_stat(strength), validate_stat(speed),
+                validate_stat(stealth), validate_stat(cunning)]):
+        e.msgbox("Stats must be numbers between 1–25.")
+        return
+
+    monster_catalogue[name] = {
+        "Strength": int(strength),
+        "Speed": int(speed),
+        "Stealth": int(stealth),
+        "Cunning": int(cunning)
+    }
+
+    e.msgbox(f"{name} update succesfully")
+
+
+def gui_output_catalogue():
+    "search for a monster and edit it if you want"
+    name = e.enterbox("Enter monster name to search:", "Search Monster") 
+
+    if name is None:
+        return
+
+    result = search_monster(name)
+
+    if result:
+        choice = e.buttonbox(
+            f"{name} found:\n{result}\n\nWhat would you like to do?",
+            "Monster Found",
+            ["Edit", "Delete", "Back"]
+        )
+
+        if choice == "Edit":
+            gui_edit_monster(name)
         
+        elif choice == "Delete":
+            if delete_monster(name):
+                e.msgbox(f"{name} deleted.")
+            else:
+                e.msgbox("Error deleting monster.")
+
+    else:
+        e.msgbox("Monster not found")
+
+
+def gui_delete_monster():
+    "Delete a monster"
+    name = e.enterbox("Enter monster name to delete:", "Delete Monster")
+
+    if name is None:
+        return
+
+    elif delete_monster(name):
+         e.msgbox(f"{name} deleted.")
+    else:
+        e.msgbox("Monster not found.")
+
+    def gui_output_catalogue():
+        "Print full catalogue to Python Shell."
+    for monster, stats in monster_catalogue.items():
+        e.msgbox(monster and stats)
+
+
+# MAIN MENU LOOP (ITERATION)
+
+while True:
+    choice = e.buttonbox(
+        "Monster Card Catalogue",
+        "Main Menu",
+        ["Add Monster", "Search Monster", "Delete Monster", "Output Catalogue", 
+        "Exit"]
+    )
     
+    if choice == "Add Monster":
+        gui_add_monster()
+
+    elif choice == "Search Monster":
+        gui_search_monster()
+
+    elif choice == "Delete Monster":
+        gui_delete_monster()
+
+    elif choice == "Output Catalogue":
+        gui_output_catalogue()
+
+    else:
+        break
