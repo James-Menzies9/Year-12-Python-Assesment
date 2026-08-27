@@ -3,7 +3,7 @@ import easygui as e
 # Catalogue of monsters
 
 monster_catalogue = {
-     "Stoneling": {"Strength": 7, "Speed": 1, "Stealth": 25, "Cunning": 15},
+    "Stoneling": {"Strength": 7, "Speed": 1, "Stealth": 25, "Cunning": 15},
     "Vexscream": {"Strength": 1, "Speed": 6, "Stealth": 21, "Cunning": 19},
     "Dawnmirage": {"Strength": 5, "Speed": 15, "Stealth": 18, "Cunning": 22},
     "Blazegolem": {"Strength": 15, "Speed": 20, "Stealth": 23, "Cunning": 6},
