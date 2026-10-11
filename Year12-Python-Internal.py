@@ -18,13 +18,15 @@ monster_catalogue = {
             # Main Code
 # Validation Structure 
 
-def validate_stat (values):
-    """Ensure stats is a number between 1-25"""
-    try:
-        value = int(value)
-        return 1 <= value <= 25 
-    except:
-        return False
+def validate_stat(value):
+     """Ensure stat is a number between 1–25."""
+     try:
+         value = int(value)
+         return 1 <= value <= 25
+     except:
+         return False
+
+        
 def validate_name(name):
     "Ensure name is not empty."
     return name.strip() !=""
@@ -42,42 +44,57 @@ def delete_monster(name):
     return False
 
 def update_monster(name,stat,new_value):
-    monster_catalogue_catalogue[name][stat] = new_value
+    monster_catalogue[name][stat] = new_value
     return monster_catalogue [name]
 
+def search_monster(name):
+    """Return monster stats if found, otherwise None."""
+    if name in monster_catalogue:
+        stats = monster_catalogue[name]
+        return (f"Strength: {stats['Strength']}\n"
+                f"Speed: {stats['Speed']}\n"
+                f"Stealth: {stats['Stealth']}\n"
+                f"Cunning: {stats['Cunning']}")
+    return None
 
 #GUI FUNCTIONS
-
 def gui_add_monster():
-    "Add a new monster card."
-    fields = ["Name", "Strength", "Speed", "Stealth", "Cunning"]
-    values = e.multchoicebox("Enter Monsters details","Add Monster", fields)
+    """Add a new monster card."""
 
-    name, strength, speed, stealth, cunning = values
-
-    if values is None:
+    # --- INPUT FIELDS USING INTEGERBOXES ---
+    name = e.enterbox("Enter Monster Name:", "Monster Name")
+    if name is None:
         return
 
-    #Validation
-    
+    strength = e.integerbox("Enter Strength (1–25):", "Strength", lowerbound=1, upperbound=25)
+    if strength is None:
+        return
+
+    speed = e.integerbox("Enter Speed (1–25):", "Speed", lowerbound=1, upperbound=25)
+    if speed is None:
+        return
+
+    stealth = e.integerbox("Enter Stealth (1–25):", "Stealth", lowerbound=1, upperbound=25)
+    if stealth is None:
+        return
+
+    cunning = e.integerbox("Enter Cunning (1–25):", "Cunning", lowerbound=1, upperbound=25)
+    if cunning is None:
+        return
+
+    # --- VALIDATION ---
     if not validate_name(name):
         e.msgbox("Invalid Name")
         return
 
-    if not all([validate_stat(speed), validate_stat(strength),
-                validate_stat(cunning), validate_stat(stealth)]):
-        e.msgbox("Stats must between numbers 1-25")
-        return
-
     stats = {
-         "Strength": int(strength),
-        "Speed": int(speed),
-        "Stealth": int(stealth),
-        "Cunning": int(cunning)
+        "Strength": strength,
+        "Speed": speed,
+        "Stealth": stealth,
+        "Cunning": cunning
     }
 
-    added = add_monster(name,stats)
-
+    added = add_monster(name, stats)
     #Confirmation Loop 
     while True:
         choice = e.buttonbox(
@@ -90,7 +107,7 @@ def gui_add_monster():
             break
 
         elif choice == "Edit":
-            gui_add_monster(name)
+            gui_add_monster()
             break  
 
         else:
@@ -128,34 +145,32 @@ def gui_edit_monster(name):
 
     e.msgbox(f"{name} update succesfully")
 
-
 def gui_output_catalogue():
     "search for a monster and edit it if you want"
     name = e.enterbox("Enter monster name to search:", "Search Monster") 
-
+ 
     if name is None:
         return
-
+ 
     result = search_monster(name)
-
+ 
     if result:
         choice = e.buttonbox(
-            f"{name} found:\n{result}\n\nWhat would you like to do?",
-            "Monster Found",
-            ["Edit", "Delete", "Back"]
-        )
-
+             f"{name} found:\n{result}\n\nWhat would you like to do?",
+             "Monster Found",
+             ["Edit", "Delete", "Back"]
+         )
+ 
         if choice == "Edit":
-            gui_edit_monster(name)
-        
+             gui_edit_monster(name)
+         
         elif choice == "Delete":
-            if delete_monster(name):
-                e.msgbox(f"{name} deleted.")
-            else:
-                e.msgbox("Error deleting monster.")
-
+             if delete_monster(name):
+                 e.msgbox(f"{name} deleted.")
+             else:
+                 e.msgbox("Error deleting monster.")
     else:
-        e.msgbox("Monster not found")
+         e.msgbox("Monster not found")
 
 
 def gui_delete_monster():
@@ -170,10 +185,17 @@ def gui_delete_monster():
     else:
         e.msgbox("Monster not found.")
 
-    def gui_output_catalogue():
-        "Print full catalogue to Python Shell."
+def gui_output_full_catalogue():
+    """Display the full monster catalogue."""
+    text = ""
     for monster, stats in monster_catalogue.items():
-        e.msgbox(monster and stats)
+        text += f"{monster}\n"
+        text += f"  Strength: {stats['Strength']}\n"
+        text += f"  Speed: {stats['Speed']}\n"
+        text += f"  Stealth: {stats['Stealth']}\n"
+        text += f"  Cunning: {stats['Cunning']}\n\n"
+
+    e.msgbox(text, "Full Monster Catalogue")
 
 
 # MAIN MENU LOOP (ITERATION)
@@ -190,13 +212,16 @@ while True:
         gui_add_monster()
 
     elif choice == "Search Monster":
-        gui_search_monster()
+        gui_output_catalogue()
 
     elif choice == "Delete Monster":
         gui_delete_monster()
 
     elif choice == "Output Catalogue":
-        gui_output_catalogue()
+        gui_output_full_catalogue()
+
 
     else:
         break
+
+
